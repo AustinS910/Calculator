@@ -10,7 +10,6 @@ public class Calculator {
     public Calculator() {
 
         JFrame frame = new JFrame("Calculator");
-        frame.setSize(350, 225);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new GridBagLayout());
@@ -18,7 +17,13 @@ public class Calculator {
 
         GridBagConstraints gbc = new GridBagConstraints();
 
-        JTextField result = new JTextField("Results");
+        JTextField result = new JTextField("0");
+
+        gbc.weighty = 1.0;
+        gbc.weightx = 1.0;
+
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
 
         JButton zero = new JButton();
         JButton one = new JButton("1");
@@ -44,15 +49,11 @@ public class Calculator {
         JButton multiply = new JButton("*");
         JButton equals = new JButton("=");
 
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.ipady = 70;
         panel.add(result, gbc);
 
-        gbc.fill = GridBagConstraints.BOTH;
         gbc.gridwidth = 1;
-
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
+        gbc.ipady = 0;
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -119,6 +120,7 @@ public class Calculator {
         gbc.gridx = 4;
         panel.add(equals, gbc);
 
+        frame.pack();
         frame.setVisible(true);
 
     }
