@@ -1,10 +1,8 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 
-public class Calculator implements ActionListener {
+public class Calculator {
 
     private final JFrame frame;
     private final JPanel panel;
@@ -47,7 +45,7 @@ public class Calculator implements ActionListener {
 
         gbc.insets = new Insets(2, 2, 2, 2);
 
-        String[] buttonLabels = { "Del", "Clear", "%", "+", "7", "8", "9", "-", "4", "5", "6", "*", "1", "2", "3", "/",
+        String[] buttonLabels = { "Del", "Clear", "^2", "+", "7", "8", "9", "-", "4", "5", "6", "*", "1", "2", "3", "/",
                 "+/-", "0", ".", "=" };
 
         ArrayList<JButton> buttons = new ArrayList<>();
@@ -57,7 +55,7 @@ public class Calculator implements ActionListener {
             JButton button = new JButton(buttonLabel);
 
             button.setActionCommand(buttonLabel);
-            button.addActionListener(this);
+            button.addActionListener(new CalcActionListener(this, result));
             buttons.add(button);
         }
 
@@ -98,9 +96,7 @@ public class Calculator implements ActionListener {
         frame.setVisible(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent button) {
-
+    public JTextField getResult() {
+        return result;
     }
-
 }
