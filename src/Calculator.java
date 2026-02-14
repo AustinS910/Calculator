@@ -8,6 +8,8 @@ public class Calculator {
     private final JPanel panel;
     private final JTextField result;
 
+    private final ArrayList<String> equation = new ArrayList<>();
+
     public Calculator() {
 
         frame = new JFrame("Calculator");
@@ -55,7 +57,7 @@ public class Calculator {
             JButton button = new JButton(buttonLabel);
 
             button.setActionCommand(buttonLabel);
-            button.addActionListener(new CalcActionListener(this, result));
+            button.addActionListener(new CalcActionListener(this, result, equation));
             buttons.add(button);
         }
 
@@ -96,7 +98,4 @@ public class Calculator {
         frame.setVisible(true);
     }
 
-    public JTextField getResult() {
-        return result;
-    }
 }
