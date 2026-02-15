@@ -1,21 +1,19 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import javax.swing.JTextField;
 
 public class CalcActionListener implements ActionListener {
 
     private final Calculator calc;
     private final JTextField result;
-    private ArrayList<String> equation = new ArrayList<>();
 
-    public CalcActionListener(Calculator calc, JTextField result, ArrayList<String> equation) {
+    public CalcActionListener(Calculator calc, JTextField result) {
         this.calc = calc;
         this.result = result;
-        this.equation = equation;
+
     }
 
-    public boolean isInteger(Double num) {
+    public static boolean isInteger(Double num) {
         return num % 1 == 0;
     }
 
@@ -47,26 +45,25 @@ public class CalcActionListener implements ActionListener {
         if ("0123456789".contains(action)) {
 
             if (result.getText().equals("0") || "+/-*".contains(result.getText())) {
-
                 result.setText(action);
-                equation.add(action);
 
             } else {
-
                 result.setText(result.getText() + action);
-                equation.add(action);
+
             }
 
         } else if ("DelClear".contains(action)) {
 
             if (action.equals("Clear")) {
+
                 result.setText("0");
-                equation.clear();
+
+                Calculator.n1 = "0";
+                Calculator.operator = null;
+                Calculator.n2 = "0";
 
             } else if (action.equals("Del")) {
-                if (!equation.isEmpty()) {
-                    equation.removeLast();
-                }
+
                 result.setText(del(result.getText()));
             }
 
@@ -82,11 +79,10 @@ public class CalcActionListener implements ActionListener {
                     if (isInteger(num)) {
                         int num1 = (int) num;
                         result.setText(Integer.toString(num1));
-                        equation.add(action);
 
                     } else {
                         result.setText(Double.toString(num));
-                        equation.add(action);
+
                     }
                 }
             }
@@ -95,7 +91,6 @@ public class CalcActionListener implements ActionListener {
 
                 if (!result.getText().contains(".")) {
                     result.setText(result.getText() + ".");
-                    equation.add(action);
                 }
             }
 
@@ -103,27 +98,54 @@ public class CalcActionListener implements ActionListener {
 
             if ("+-/*".contains(action)) {
 
-                if ("+-/*".contains("h")) {
-                    equation.remove(equation.getLast());
+                if (Calculator.operator == null) {
+                    Calculator.n1 = result.getText();
+                    result.setText("0");
+                } else {
+                    Calculator.n2 = result.getText();
                 }
-                result.setText(action);
-                equation.add(action);
+                Calculator.operator = action;
 
             } else {
 
                 if (!result.getText().contains("^2")) {
-                    if (!equation.getLast().equals(".")) {
+                    if (!result.getText().endsWith("."))
                         result.setText(result.getText() + "^2");
-                        equation.add(action);
-                    }
                 }
             }
-        } else {
-            if (equation == null) {
-                result.setText("Empty");
-            } else {
-                result.setText(Calculate.calculate(equation));
+        } else if (action.equals("=")) {
+            try {
+
+                if (Calculator.operator != null) {
+
+                    Calculator.n2 = result.getText();
+
+                    String answer = Calculate.calculate(Calculator.n1, Calculator.operator, Calculator.n2);
+                    result.setText(answer);
+
+                    Calculator.operator = null;
+                    Calculator.n1 = "0";
+                    Calculator.n2 = "0";
+
+                } else if (Calculator.operator == null && result.getText().contains("^2")) {
+                    String answer;
+                    double num = Calculate.square(result.getText());
+
+                    if (isInteger(num)) {
+                        int num1 = (int) num;
+                        answer = Integer.toString(num1);
+
+                    } else {
+                        answer = Double.toString(num);
+                    }
+                    result.setText(answer);
+                }
+            } catch (NumberFormatException n) {
+                result.setText("NFE");
             }
+        } else {
+            result.setText("0");
+
         }
     }
 }

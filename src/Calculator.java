@@ -8,7 +8,9 @@ public class Calculator {
     private final JPanel panel;
     private final JTextField result;
 
-    private final ArrayList<String> equation = new ArrayList<>();
+    public static String n1 = "0";
+    public static String operator = null;
+    public static String n2 = "0";
 
     public Calculator() {
 
@@ -57,7 +59,7 @@ public class Calculator {
             JButton button = new JButton(buttonLabel);
 
             button.setActionCommand(buttonLabel);
-            button.addActionListener(new CalcActionListener(this, result, equation));
+            button.addActionListener(new CalcActionListener(this, result));
             buttons.add(button);
         }
 
