@@ -1,3 +1,5 @@
+//ActionListener class for Calculator, has actionPerformed method for JButtons and all the necessary logic
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JTextField;
@@ -5,36 +7,12 @@ import javax.swing.JTextField;
 public class CalcActionListener implements ActionListener {
 
     private final Calculator calc;
-    private final JTextField result;
+    private final JTextField result; //Textfield where input and answer is displayed
 
     public CalcActionListener(Calculator calc, JTextField result) {
         this.calc = calc;
         this.result = result;
 
-    }
-
-    public static boolean isInteger(Double num) {
-        return num % 1 == 0;
-    }
-
-    public String del(String str) {
-        try {
-            if (str.isEmpty() || str.equals("0")) {
-                return "0";
-
-            } else if (str.endsWith("^2")) {
-                str = str.substring(0, str.length() - 2);
-                return str;
-            }
-
-            else {
-                str = str.substring(0, str.length() - 1);
-                return str;
-            }
-
-        } catch (StringIndexOutOfBoundsException s) {
-            return "0";
-        }
     }
 
     @Override
@@ -44,11 +22,12 @@ public class CalcActionListener implements ActionListener {
 
         if ("0123456789".contains(action)) {
 
+            //If textfield is empty, set textfield to action
             if (result.getText().equals("0") || "+/-*".contains(result.getText())) {
                 result.setText(action);
 
             } else {
-                result.setText(result.getText() + action);
+                result.setText(result.getText() + action); //Append action to textfield
 
             }
 
@@ -56,15 +35,15 @@ public class CalcActionListener implements ActionListener {
 
             if (action.equals("Clear")) {
 
+                //Clear textfield and variables
                 result.setText("0");
-
                 Calculator.n1 = "0";
                 Calculator.operator = null;
                 Calculator.n2 = "0";
 
             } else if (action.equals("Del")) {
 
-                result.setText(del(result.getText()));
+                result.setText(Calculate.del(result.getText())); //Call del function and textfield
             }
 
         } else if ("+/-".equals(action) || ".".equals(action)) {
@@ -73,10 +52,11 @@ public class CalcActionListener implements ActionListener {
 
                 if (!result.getText().equals("0")) {
 
+                    //Multiply number by -1 to flip sign
                     double num = Double.parseDouble(result.getText());
                     num *= -1;
 
-                    if (isInteger(num)) {
+                    if (Calculate.isInteger(num)) { //Call isInteger method to check if num can be type-casted to int
                         int num1 = (int) num;
                         result.setText(Integer.toString(num1));
 
@@ -89,7 +69,7 @@ public class CalcActionListener implements ActionListener {
 
             else if (action.equals(".")) {
 
-                if (!result.getText().contains(".")) {
+                if (!result.getText().contains(".")) { //Check if textfield already has a decimal point
                     result.setText(result.getText() + ".");
                 }
             }
@@ -98,7 +78,7 @@ public class CalcActionListener implements ActionListener {
 
             if ("+-/*".contains(action)) {
 
-                if (Calculator.operator == null) {
+                if (Calculator.operator == null) { //If operator is num, store string from textfield in n1
                     Calculator.n1 = result.getText();
                     result.setText("0");
                 } else {
@@ -108,7 +88,7 @@ public class CalcActionListener implements ActionListener {
 
             } else {
 
-                if (!result.getText().contains("^2")) {
+                if (!result.getText().contains("^2")) { //Check if textfield already has a square
                     if (!result.getText().endsWith("."))
                         result.setText(result.getText() + "^2");
                 }
@@ -118,8 +98,9 @@ public class CalcActionListener implements ActionListener {
 
                 if (Calculator.operator != null) {
 
-                    Calculator.n2 = result.getText();
+                    Calculator.n2 = result.getText(); //Store string from textfield in n2
 
+                    //Call calculate method and display result, reset variables
                     String answer = Calculate.calculate(Calculator.n1, Calculator.operator, Calculator.n2);
                     result.setText(answer);
 
@@ -127,11 +108,12 @@ public class CalcActionListener implements ActionListener {
                     Calculator.n1 = "0";
                     Calculator.n2 = "0";
 
+                    //If input is just a square, like "8^2" calculate the square and display result
                 } else if (Calculator.operator == null && result.getText().contains("^2")) {
                     String answer;
                     double num = Calculate.square(result.getText());
 
-                    if (isInteger(num)) {
+                    if (Calculate.isInteger(num)) { //Check if number can be type-casted to int
                         int num1 = (int) num;
                         answer = Integer.toString(num1);
 
@@ -140,12 +122,13 @@ public class CalcActionListener implements ActionListener {
                     }
                     result.setText(answer);
                 }
+
             } catch (NumberFormatException n) {
                 result.setText("NFE");
             }
+
         } else {
             result.setText("0");
-
         }
     }
 }
